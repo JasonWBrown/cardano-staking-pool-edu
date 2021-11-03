@@ -11,7 +11,7 @@ then
   OS_ARCH="aarch64"
 fi
 
-NODE_VERSION=${NODE_VERSION:-"1.27.0"}
+NODE_VERSION=${NODE_VERSION:-"1.29.0"}
 IMAGE_TAG="${NODE_VERSION}-${OS_ARCH}"
 
 ## The folder, on the actual Raspberry Pi where to download the blockchain
@@ -41,7 +41,10 @@ if [ "${NODE_MODE}" = "relay" ]; then
 
   sleep 5
 
-  docker run --name "cardano-node-${NETWORK}" -d -v $DB_FOLDER:/db -e CARDANO_NODE_SOCKET_PATH=/db/node.socket \
+  docker run \
+    --name "cardano-node-${NETWORK}" -d -v $DB_FOLDER:/db \
+    --health-cmd 'curl -f --retry 6 --max-time 5 --retry-delay 10 --retry-max-time 60 "http://localhost:12798/metrics" || exit 1' \
+    -e CARDANO_NODE_SOCKET_PATH=/db/node.socket \
     -p "${CARDANO_NODE_PORT}:${CARDANO_NODE_PORT}" \
     "${@:3}" "cardano-node:${IMAGE_TAG}" \
     "cardano-node run \
@@ -50,7 +53,7 @@ if [ "${NODE_MODE}" = "relay" ]; then
     --socket-path /db/node.socket \
     --host-addr 0.0.0.0 \
     --port $CARDANO_NODE_PORT \
-    --config /etc/config/${NETWORK}-config.json"
+    --config /etc/config/${NETWORK}-config.json" 
 
 elif [ "${NODE_MODE}" = "bp" ]; then
 

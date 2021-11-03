@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install -y automake build-essential pkg-config libffi-dev libgmp-dev libssl-dev libtinfo-dev libsystemd-dev \
-    zlib1g-dev make g++ tmux git jq curl libncursesw5 libtool autoconf llvm libnuma-dev
+    zlib1g-dev make g++ tmux git jq curl libncursesw5 libtool autoconf llvm-9 libnuma-dev
 
 # INSTALL GHC
 # The Glasgow Haskell Compiler
@@ -14,7 +14,9 @@ ARG OS_ARCH
 WORKDIR /build/ghc
 RUN curl https://downloads.haskell.org/~ghc/${GHC_VERSION}/ghc-${GHC_VERSION}-${OS_ARCH}-deb10-linux.tar.xz | \
     tar -Jx -C /build/ghc
-RUN cd ghc-${GHC_VERSION} && ./configure && make install
+RUN cd ghc-${GHC_VERSION} \
+    && ./configure CONF_CC_OPTS_STAGE2="-marm -march=armv7-a" CFLAGS="-marm -march=armv7-a" \
+    && make install
 
 # Install Libsodium
 WORKDIR /build/libsodium
@@ -29,14 +31,14 @@ ENV PKG_CONFIG_PATH="/usr/local/lib/pkgconfig"
 # Cabal to PATH
 RUN curl -L https://downloads.haskell.org/~cabal/cabal-install-3.4.0.0/cabal-install-3.4.0.0-${OS_ARCH}-ubuntu-18.04.tar.xz | \
     tar -Jx -C /usr/bin/
-RUN cabal update
+RUN cabal update -v3
 
 ARG CARDANO_VERSION="1.29.0"
 WORKDIR /build/cardano-node
 RUN git clone --branch ${CARDANO_VERSION} https://github.com/input-output-hk/cardano-node.git && \
     cd cardano-node && \
-    cabal configure --with-compiler=ghc-8.10.2 && \
-    cabal build all
+    cabal configure -v3 --with-compiler=ghc-8.10.2 && \
+    cabal build all -v3
 
 FROM ubuntu:20.04
 

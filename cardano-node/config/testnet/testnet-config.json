@@ -13,16 +13,16 @@
   "RequiresNetworkMagic": "RequiresMagic",
   "ShelleyGenesisFile": "testnet-shelley-genesis.json",
   "ShelleyGenesisHash": "849a1764f152e1b09c89c0dfdbcbdd38d711d1fec2db5dfa0f87cf2737a0eaf4",
-  "TraceBlockFetchClient": false,
-  "TraceBlockFetchDecisions": false,
-  "TraceBlockFetchProtocol": false,
+  "TraceBlockFetchClient": true,
+  "TraceBlockFetchDecisions": true,
+  "TraceBlockFetchProtocol": true,
   "TraceBlockFetchProtocolSerialised": false,
-  "TraceBlockFetchServer": false,
+  "TraceBlockFetchServer": true,
   "TraceChainDb": true,
-  "TraceChainSyncBlockServer": false,
-  "TraceChainSyncClient": false,
-  "TraceChainSyncHeaderServer": false,
-  "TraceChainSyncProtocol": false,
+  "TraceChainSyncBlockServer": true,
+  "TraceChainSyncClient": true,
+  "TraceChainSyncHeaderServer": true,
+  "TraceChainSyncProtocol": true,
   "TraceConnectionManager": true,
   "TraceDNSResolver": true,
   "TraceDNSSubscription": true,
@@ -65,7 +65,7 @@
     "127.0.0.1",
     12798
   ],
-  "minSeverity": "Info",
+  "minSeverity": "Debug",
   "options": {
     "mapBackends": {
       "cardano.node.metrics": [

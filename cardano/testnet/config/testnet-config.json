@@ -54,7 +54,7 @@
     "0.0.0.0",
     12798
   ],
-  "minSeverity": "Info",
+  "minSeverity": "Debug",
   "options": {
     "mapBackends": {
       "cardano.node.metrics": [
